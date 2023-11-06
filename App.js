@@ -1,20 +1,72 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+//React native básicos
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-export default function App() {
+//navigate
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+//telas
+import ScannerScreen from './telas/Scanner';
+import LancarScreen from './telas/Lancar';
+import HomeScreen from './telas/Home';
+
+//estilos
+import { styles } from './telas/styles';
+
+//SQLITE
+import * as SQLite from 'expo-sqlite';
+
+
+function CameraScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <ScannerScreen navigation={navigation} />
+      <View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.scanButtonText}>Voltar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate('Lancar');
+          }}
+        >
+          <Text style={styles.scanButtonText}>fake scan</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#38b0DE',
+          },
+          headerTintColor: 'white',
+          headerShadowVisible: true,
+        }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Camera" component={CameraScreen} />
+        <Stack.Screen name="Lancar" component={LancarScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+
+  );
+}
+
+export default App;
